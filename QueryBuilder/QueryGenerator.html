@@ -1,0 +1,342 @@
+﻿<html>
+<head>
+    <title>jQuery add / remove textbox example</title>
+
+
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <script src="Scripts/jquery-3.3.1.min.js"></script>
+    <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+
+
+
+    <style type="text/css">
+        div {
+            padding: 8px;
+        }
+    </style>
+
+
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('#example').DataTable();
+            var counter = 2;
+            //Build an array containing Customer records.
+
+
+            var columns = [];
+            $.ajax({
+
+                type: 'GET',
+                url: 'http://localhost:36932/api/employees/ColumnNames',
+                contentType: 'application/json;charset=utf-8',
+                dataType: "json",
+                success: function (data) {
+                    // alert("success");
+                    savecolumns(data);
+                    columns = data;
+                    // alert(JSON.stringify(columns));
+                    //Add the Options to the DropDownList.
+                    $.each(data, function (i) {
+                        $('#column1').append($('<option></option>').val(data[i].columnname).html(data[i].columnname));
+                    });
+                },
+
+                error: function (xhr, textStatus, errorThrown) {
+
+                    alert('Error in Operation');
+
+                }
+
+            });
+
+            function savecolumns(data) {
+                columns = data;
+                // alert(data);
+            }
+            var conditions = [
+
+                { ConditionId: 1, Name: "equal", Symbol: "=" },
+                { ConditionId: 2, Name: "not equal", Symbol: "!=" },
+                { ConditionId: 3, Name: "is null", Symbol: "is null" },
+                { ConditionId: 4, Name: "is not null", Symbol: "is not null" }
+            ];
+
+            var andorclause = [{ name: "and", value: "and" }, { name: "or", value: "or" }]
+
+            $(conditions).each(function () {
+                var option = $("<option />");
+
+                //Set Customer Name in Text part.
+                option.html(this.Name);
+
+                //Set CustomerId in Value part.
+                option.val(this.Symbol);
+
+                //Add the Option element to DropDownList.
+                $("#condition1").append(option);
+            });
+
+            $(andorclause).each(function () {
+                var option = $("<option />");
+
+                //Set Customer Name in Text part.
+                option.html('');
+
+                //Set CustomerId in Value part.
+                option.val('');
+
+                //Add the Option element to DropDownList.
+                $("#andor1").append(option);
+            });
+
+            $("#addButton").click(function () {
+
+
+                // alert(JSON.stringify(columns));
+
+
+
+
+
+
+                if (counter > 10) {
+                    alert("Only 10 textboxes allow");
+                    return false;
+                }
+
+
+                //Create a DropDownList element.
+                var ddlColumn = $("<select  id=column" + counter + " class='form-control' />");
+                //var ddlColumn = $("<select  />");
+                var ddlCondition = $("<select  id=condition" + counter + " class='form-control'/>");
+                //var ddlCondition = $("<select  />");
+                var ddlandor = $("<select  id=andor" + counter + " />");
+
+                //Add the Options to the DropDownList.
+                $(columns).each(function () {
+                    var option = $('<option />');
+
+                    //Set Customer Name in Text part.
+                    option.html(this.columnname);
+
+                    //Set CustomerId in Value part.
+                    option.val(this.columnname);
+
+                    //Add the Option element to DropDownList.
+                    ddlColumn.append(option);
+                });
+
+                //Add the Options to the DropDownList.
+                $(conditions).each(function () {
+                    var option = $('<option />');
+
+                    //Set Customer Name in Text part.
+                    option.html(this.Name);
+
+                    //Set CustomerId in Value part.
+                    option.val(this.Symbol);
+
+                    //Add the Option element to DropDownList.
+                    ddlCondition.append(option);
+                });
+                $(andorclause).each(function () {
+                    var option = $('<option />');
+
+                    //Set Customer Name in Text part.
+                    option.html(this.name);
+
+                    //Set CustomerId in Value part.
+                    option.val(this.value);
+
+                    //Add the Option element to DropDownList.
+                    ddlandor.append(option);
+                });
+
+                var startelementsDiv = $("<div class='col-sm-3 nopadding'><div class='form-group'>");
+                var endelementDiv = $("<div></div>");
+                ddlCondition.appendTo("#TextBoxesGroup");
+
+                var newTextBoxDiv = $(document.createElement('div'))
+                    .attr("id", 'TextBoxDiv' + counter);
+                var newSelectColumnDiv = $(document.createElement('div'))
+                    .attr("id", 'SelectColumnDiv' + counter);
+                var newSelectConditionDiv = $(document.createElement('div'))
+                    .attr("id", 'SelectConditionDiv' + counter);
+                var newSelectAndOrDiv = $(document.createElement('div'))
+                    .attr("id", 'SelectAndOrDiv' + counter);
+
+
+                newSelectAndOrDiv.appendTo("#TextBoxesGroup");
+                ddlandor.appendTo("#TextBoxesGroup");
+               // newSelectColumnDiv.after().html('<label>Column' + counter + ' : </label>');
+
+                newSelectColumnDiv.appendTo("#TextBoxesGroup");
+                ddlColumn.appendTo("#TextBoxesGroup");
+
+               // newSelectConditionDiv.after().html('<label>Condition' + counter + ' : </label>');
+
+                newSelectConditionDiv.appendTo("#TextBoxesGroup");
+                ddlCondition.appendTo("#TextBoxesGroup");
+
+
+                //newTextBoxDiv.after().html('<label>Value' + counter + ' : </label>' +
+                //    '<input type="text" name="textbox' + counter +
+                //    '" id="textbox' + counter + '" value="" >');
+
+                newTextBoxDiv.after().html(
+                    '<input type="text" name="textbox' + counter +
+                    '" id="textbox' + counter + '" class="form-control" value=""  />');
+
+                newTextBoxDiv.appendTo("#TextBoxesGroup");
+
+
+                counter++;
+
+
+
+
+
+            });
+
+            $("#removeButton").click(function () {
+                if (counter == 1) {
+                    alert("No more textbox to remove");
+                    return false;
+                }
+
+                counter--;
+
+                $("#TextBoxDiv" + counter).remove();
+                $("#SelectColumnDiv" + counter).remove();
+                $("#SelectConditionDiv" + counter).remove();
+                $("#SelectAndOrDiv" + counter).remove();
+                $("#column" + counter).remove();
+                $("#condition" + counter).remove();
+                $("#andor" + counter).remove();
+
+
+            });
+
+            $("#runQuery").click(function () {
+                var employees = [];
+                var finalquery = '';
+                for (i = 1; i < counter; i++) {
+
+                    item = {}
+                    var valueparameter = '';
+                    if ($('#column' + i).val().toLowerCase() == 'id') {
+                        valueparameter = " " + $('#textbox' + i).val() + " ";
+                    }
+                    else {
+                        valueparameter = " '" + $('#textbox' + i).val() + "' ";
+                    }
+                    //item["column"] = $('#column' + i).val();
+                    //item["condition"] = $('#condition' + i).val();
+                    //item["value"] = $('#textbox' + i).val();
+                    finalquery = finalquery + $('#andor' + i).val() + " " + $('#column' + i).val() + " " + $('#condition' + i).val() + valueparameter;
+
+                }
+                item["finalquery"] = finalquery
+                employees.push(item);
+                var querydata = JSON.stringify(employees);
+               
+                alert(querydata);
+                $.ajax({
+
+                    type: 'POST',
+                    url: 'http://localhost:36932/api/employees',
+                    contentType: 'application/json;charset=utf-8',
+                    dataType: "json",
+                    data: querydata,
+                    success: function (data) {
+                        alert("success");
+                        var table = '';
+                        var tableheader = '<thead><tr><td>ID</td><td>FirstName</td><td>LastName</td><td>Gender</td><td>Salary</td></tr></thead>'
+                        $.each(data, function (i) {
+                            table = table + '<tr><td>' + data[i].ID + '</td>' + '<td>' + data[i].FirstName + '</td>' + '<td>' + data[i].LastName + '</td>' + '<td>' + data[i].Gender + '</td>' + '<td>' + data[i].Salary + '</td></tr>';
+
+                        });
+                        alert(tableheader + table);
+                        $('#myTable').append(tableheader + table);
+                        $('#myTable').DataTable();
+                    },
+
+                    error: function (xhr, textStatus, errorThrown) {
+
+                        alert('Error in Operation');
+
+                    }
+
+                });
+
+            });
+
+            $("#getButtonValue").click(function () {
+
+                //alert(counter);
+
+                var query = '';
+                for (i = 1; i < counter; i++) {
+                    var valueparameter = '';
+                    if ($('#column' + i).val().toLowerCase() == 'id') {
+                        valueparameter = " " + $('#textbox' + i).val() + " ";
+                    }
+                    else {
+                        valueparameter = " '" + $('#textbox' + i).val() + "' ";
+                    }
+
+                    query = query + $('#andor' + i).val() + " a." + $('#column' + i).val() + " " + $('#condition' + i).val() + valueparameter;
+
+                }
+                //alert(query);
+            });
+        });
+    </script>
+</head>
+<body>
+
+    <div id='TextBoxesGroup'>
+        <div class="col-sm-2 nopadding">
+            <div class="form-group">
+                <select id="column1" class="form-control"></select>
+            </div>
+        </div>
+        <div class="col-sm-2 nopadding">
+            <div class="form-group">
+                <select id="condition1" class="form-control"></select>
+            </div>
+        </div>
+        <div class="col-sm-2 nopadding">
+            <div class="form-group">
+                <input type='text' id='textbox1' class="form-control">
+            </div>
+            </div>
+            <select id="andor1" hidden="hidden"></select>
+            <!--<div id="SelectColumnDiv1">
+
+            <select id="column1" class="form-control"></select>
+
+        </div>
+        <div id="SelectConditionDiv1">
+
+            <select id="condition1" class="form-control"></select>
+            <select id="andor1" hidden="hidden"></select>
+        </div>
+        <div id="TextBoxDiv1">
+
+            <input type='text' id='textbox1' class="form-control">
+
+        </div>-->
+
+        </div>
+        <input type='button' value='Add Query' id='addButton'>
+        <input type='button' value='Remove Query' id='removeButton'>
+        <input type='button' value='Run Query' id='runQuery'>
+        <input type='button' value='Get TextBox Value' id='getButtonValue'>
+        <table id="myTable" class="display" style="width:100%" />
+</body>
+</html>

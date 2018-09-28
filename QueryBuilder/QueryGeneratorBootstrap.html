@@ -1,0 +1,307 @@
+﻿<html>
+<head>
+    <title>jQuery add / remove textbox example</title>
+
+    <script src="Scripts/jquery-3.3.1.min.js"></script>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+
+    <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+
+
+
+    <style type="text/css">
+        div {
+            padding: 8px;
+        }
+    </style>
+
+
+
+    <script type="text/javascript">
+        var room = 1;
+        //function education_fields() {
+
+        //    room++;
+        //    var objTo = document.getElementById('education_fields')
+        //    var divtest = document.createElement("div");
+        //    divtest.setAttribute("class", "form-group removeclass" + room);
+        //    var rdiv = 'removeclass' + room;
+        //    divtest.innerHTML = '<div class="col-sm-3 nopadding"><div class="form-group"> <input type="text" class="form-control" id="Schoolname" name="Schoolname[]" value="" placeholder="School name"></div></div><div class="col-sm-3 nopadding"><div class="form-group"> <input type="text" class="form-control" id="Major" name="Major[]" value="" placeholder="Major"></div></div><div class="col-sm-3 nopadding"><div class="form-group"> <input type="text" class="form-control" id="Degree" name="Degree[]" value="" placeholder="Degree"></div></div><div class="col-sm-3 nopadding"><div class="form-group"><div class="input-group"> <select class="form-control" id="educationDate" name="educationDate[]"><option value="">Date</option><option value="2015">2015</option><option value="2016">2016</option><option value="2017">2017</option><option value="2018">2018</option> </select><div class="input-group-btn"> <button id="removeButton" class="btn btn-danger" type="button" onclick="remove_education_fields(' + room + ');"> <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> </button></div></div></div></div><div class="clear"></div>';
+
+        //    objTo.appendChild(divtest);
+        //}
+        function remove_education_fields(rid) {
+            $('.removeclass' + rid).remove();
+        }
+        $(document).ready(function () {
+            $('#example').DataTable();
+            var counter = 2;
+            //Build an array containing Customer records.
+
+
+            var columns = [];
+            $.ajax({
+
+                type: 'GET',
+                url: 'http://localhost:36932/api/employees/ColumnNames',
+                contentType: 'application/json;charset=utf-8',
+                dataType: "json",
+                success: function (data) {
+                    // alert("success");
+                    savecolumns(data);
+                    columns = data;
+                    // alert(JSON.stringify(columns));
+                    //Add the Options to the DropDownList.
+                    $.each(data, function (i) {
+                        $('#column1').append($('<option></option>').val(data[i].columnname).html(data[i].columnname));
+                    });
+                },
+
+                error: function (xhr, textStatus, errorThrown) {
+
+                    alert('Error in Operation');
+
+                }
+
+            });
+
+            function savecolumns(data) {
+                columns = data;
+                // alert(data);
+            }
+            var conditions = [
+
+                { ConditionId: 1, Name: "equal", Symbol: "=" },
+                { ConditionId: 2, Name: "not equal", Symbol: "!=" },
+                { ConditionId: 3, Name: "is null", Symbol: "is null" },
+                { ConditionId: 4, Name: "is not null", Symbol: "is not null" }
+            ];
+
+            var andorclause = [{ name: "and", value: "and" }, { name: "or", value: "or" }]
+
+            $(conditions).each(function () {
+                var option = $("<option />");
+
+                //Set Customer Name in Text part.
+                option.html(this.Name);
+
+                //Set CustomerId in Value part.
+                option.val(this.Symbol);
+
+                //Add the Option element to DropDownList.
+                $("#condition1").append(option);
+            });
+
+            $(andorclause).each(function () {
+                var option = $("<option />");
+
+                //Set Customer Name in Text part.
+                option.html('');
+
+                //Set CustomerId in Value part.
+                option.val('');
+
+                //Add the Option element to DropDownList.
+                $("#andor1").append(option);
+            });
+
+           
+
+            $("#addButton").click(function () {
+                room++;
+                var objTo = document.getElementById('education_fields')
+                var divtest = document.createElement("div");
+                divtest.setAttribute("class", "form-group removeclass" + room);
+                var rdiv = 'removeclass' + room;
+                divtest.innerHTML = '<div class="col-sm-3 nopadding"><div class="form-group">  <select id="column' + room + '" class="form-control"></select></div></div><div class="col-sm-3 nopadding"><div class="form-group"> <select id="condition' + room + '" class="form-control"></select></div></div><div class="col-sm-3 nopadding"><div class="form-group"><div class="input-group"> <input type="text" id="textbox' + room + '" class="form-control"> <div class="input-group-btn"><button id="removeButton" class="btn btn-danger" type="button" onclick="remove_education_fields(' + room + ');"> <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> </button></div></div></div></div></div><div class="clear"></div>';
+                //divtest.innerHTML = '<div class="col-sm-3 nopadding"><div class="form-group"> <input type="text" class="form-control" id="Schoolname" name="Schoolname[]" value="" placeholder="School name"></div></div><div class="col-sm-3 nopadding"><div class="form-group"> <input type="text" class="form-control" id="Major" name="Major[]" value="" placeholder="Major"></div></div><div class="col-sm-3 nopadding"><div class="form-group"> <input type="text" class="form-control" id="Degree" name="Degree[]" value="" placeholder="Degree"></div></div><div class="col-sm-3 nopadding"><div class="form-group"><div class="input-group"> <select class="form-control" id="educationDate" name="educationDate[]"><option value="">Date</option><option value="2015">2015</option><option value="2016">2016</option><option value="2017">2017</option><option value="2018">2018</option> </select><div class="input-group-btn"> <button id="removeButton" class="btn btn-danger" type="button"> <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> </button></div></div></div></div><div class="clear"></div>';
+
+               
+               
+
+
+
+                objTo.appendChild(divtest);
+
+               
+                //Add the Options to the DropDownList.
+                $(columns).each(function () {
+                    
+                    var option = $('<option />');
+
+                    //Set Customer Name in Text part.
+                    option.html(this.columnname);
+
+                    //Set CustomerId in Value part.
+                    option.val(this.columnname);
+
+                    //Add the Option element to DropDownList.
+                    $('#column' + room).append(option);
+                });
+
+
+                //Add the Options to the DropDownList.
+                $(conditions).each(function () {
+                    var option = $('<option />');
+
+                    //Set Customer Name in Text part.
+                    option.html(this.Name);
+
+                    //Set CustomerId in Value part.
+                    option.val(this.Symbol);
+
+                    //Add the Option element to DropDownList.
+                    $('#condition' + room).append(option);
+                });
+                //$(andorclause).each(function () {
+                //    var option = $('<option />');
+
+                //    //Set Customer Name in Text part.
+                //    option.html(this.name);
+
+                //    //Set CustomerId in Value part.
+                //    option.val(this.value);
+
+                //    //Add the Option element to DropDownList.
+                //    ddlandor.append(option);
+                //});
+
+
+            });
+           
+
+            
+
+            
+            $("#runQuery").click(function () {
+                var employees = [];
+                var finalquery = '';
+                for (i = 1; i < counter; i++) {
+
+                    item = {}
+                    var valueparameter = '';
+                    if ($('#column' + i).val().toLowerCase() == 'id') {
+                        valueparameter = " " + $('#textbox' + i).val() + " ";
+                    }
+                    else {
+                        valueparameter = " '" + $('#textbox' + i).val() + "' ";
+                    }
+                    //item["column"] = $('#column' + i).val();
+                    //item["condition"] = $('#condition' + i).val();
+                    //item["value"] = $('#textbox' + i).val();
+                    finalquery = finalquery + $('#andor' + i).val() + " " + $('#column' + i).val() + " " + $('#condition' + i).val() + valueparameter;
+
+                }
+                item["finalquery"] = finalquery
+                employees.push(item);
+                var querydata = JSON.stringify(employees);
+
+                alert(querydata);
+                $.ajax({
+
+                    type: 'POST',
+                    url: 'http://localhost:36932/api/employees',
+                    contentType: 'application/json;charset=utf-8',
+                    dataType: "json",
+                    data: querydata,
+                    success: function (data) {
+                        alert("success");
+                        var table = '';
+                        var tableheader = '<thead><tr><td>ID</td><td>FirstName</td><td>LastName</td><td>Gender</td><td>Salary</td></tr></thead>'
+                        $.each(data, function (i) {
+                            table = table + '<tr><td>' + data[i].ID + '</td>' + '<td>' + data[i].FirstName + '</td>' + '<td>' + data[i].LastName + '</td>' + '<td>' + data[i].Gender + '</td>' + '<td>' + data[i].Salary + '</td></tr>';
+
+                        });
+                        alert(tableheader + table);
+                        $('#myTable').append(tableheader + table);
+                        $('#myTable').DataTable();
+                    },
+
+                    error: function (xhr, textStatus, errorThrown) {
+
+                        alert('Error in Operation');
+
+                    }
+
+                });
+
+            });
+
+            $("#getButtonValue").click(function () {
+
+                //alert(counter);
+
+                var query = '';
+                for (i = 1; i < counter; i++) {
+                    var valueparameter = '';
+                    if ($('#column' + i).val().toLowerCase() == 'id') {
+                        valueparameter = " " + $('#textbox' + i).val() + " ";
+                    }
+                    else {
+                        valueparameter = " '" + $('#textbox' + i).val() + "' ";
+                    }
+
+                    query = query + $('#andor' + i).val() + " a." + $('#column' + i).val() + " " + $('#condition' + i).val() + valueparameter;
+
+                }
+                //alert(query);
+            });
+        });
+    </script>
+</head>
+<body>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">Dynamic Form Fields - Add & Remove Multiple fields</div>
+        <div class="panel-heading">Education Experience</div>
+        <div class="panel-body">
+
+            <div id="education_fields">
+
+            </div>
+            <div class="col-sm-3 nopadding">
+                <div class="form-group">
+                    <select id="column1" class="form-control"></select>
+                </div>
+            </div>
+            <div class="col-sm-3 nopadding">
+                <div class="form-group">
+                    <select id="condition1" class="form-control"></select>
+                </div>
+            </div>
+            <div class="col-sm-3 nopadding">
+                <div class="form-group">
+                    <div class="input-group">
+                        <input type='text' id='textbox1' class="form-control">
+                        <div class="input-group-btn">
+                            <!--<button id="addButton" class="btn btn-success" type="button" onclick="education_fields();"> <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> </button>-->
+                            <button id="addButton" class="btn btn-success" type="button"> <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> </button>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            <!--<div class="col-sm-3 nopadding">
+                <div class="form-group">
+                    <div class="input-group">
+                        <select class="form-control" id="educationDate" name="educationDate[]">
+
+                            <option value="">Date</option>
+                            <option value="2015">2015</option>
+                            <option value="2016">2016</option>
+                            <option value="2017">2017</option>
+                            <option value="2018">2018</option>
+                        </select>
+                       
+                    </div>
+                </div>
+            </div>-->
+            <div class="clear"></div>
+
+        </div>
+        <div class="panel-footer"><small>Press <span class="glyphicon glyphicon-plus gs"></span> to add another form field :)</small>, <small>Press <span class="glyphicon glyphicon-minus gs"></span> to remove form field :)</small></div>
+        
+    </div>
+    </body>
+</html>
