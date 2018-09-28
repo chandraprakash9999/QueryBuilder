@@ -100,6 +100,8 @@ namespace QueryBuilder.Controllers
         public HttpResponseMessage getCategories()
         {
            //Added a comment
+           //code to call feature 1
+
             string jsonFile = @"C:\WebApiProject\QueryBuilder\QueryBuilder\json\categories.json";
             var json = File.ReadAllText(jsonFile);
             List<Categories> categoryList = new List<Categories>();
