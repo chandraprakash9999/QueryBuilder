@@ -134,7 +134,7 @@ namespace QueryBuilder.Controllers
 
         [Route("api/employees/SeedsByCategory/{categoryid}")]
         [AllowAnonymous]
-        public IEnumerable<Seeds> getSeedsByCategory(string categoryid)
+        public HttpResponseMessage getSeedsByCategory(string categoryid)
         {
             string jsonFile = @"C:\WebApiProject\QueryBuilder\QueryBuilder\json\seeds.json";
             var json = File.ReadAllText(jsonFile);
@@ -144,7 +144,7 @@ namespace QueryBuilder.Controllers
             seedsList = (from x in list where (x.categoryId == categoryid)
                         select x).ToList<Seeds>() ;
 
-            return seedsList;
+            return Request.CreateResponse(HttpStatusCode.OK,seedsList);
 
 
         }
