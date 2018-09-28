@@ -99,7 +99,7 @@ namespace QueryBuilder.Controllers
         [AllowAnonymous]
         public HttpResponseMessage getCategories()
         {
-           
+           //Added a comment
             string jsonFile = @"C:\WebApiProject\QueryBuilder\QueryBuilder\json\categories.json";
             var json = File.ReadAllText(jsonFile);
             List<Categories> categoryList = new List<Categories>();
